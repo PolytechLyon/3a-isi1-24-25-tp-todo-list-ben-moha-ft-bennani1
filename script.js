@@ -13,6 +13,7 @@ const editTodoCancelButton = document.getElementById("edit-todo-item-cancel");
 // Variable pour stocker l'élément actuellement en modification
 let itemBeingEdited = null;
 
+// Fonction pour ajouter un nouvel item
 function addTodoItem() {
     const title = newTodoInput.value.trim();
     if (title === "") return; // Ignore si l'entrée est vide
@@ -42,3 +43,52 @@ function addTodoItem() {
     // Réinitialise l'entrée
     newTodoInput.value = "";
 }
+
+// Fonction pour entrer en mode édition
+function enterEditMode(listItem) {
+    itemBeingEdited = listItem;
+    const currentTitle = listItem.querySelector("span").textContent;
+
+    // Met à jour l'input d'édition avec le texte actuel
+    editTodoInput.value = currentTitle;
+
+    // Affiche le panneau d'édition et masque le panneau d'ajout
+    newItemPanel.hidden = true;
+    editItemPanel.hidden = false;
+}
+
+// Fonction pour confirmer la modification
+function confirmEdit() {
+    if (itemBeingEdited) {
+        const updatedTitle = editTodoInput.value.trim();
+        if (updatedTitle !== "") {
+            itemBeingEdited.querySelector("span").textContent = updatedTitle;
+        }
+    }
+
+    // Quitte le mode d'édition
+    exitEditMode();
+}
+
+// Fonction pour annuler la modification
+function cancelEdit() {
+    // Quitte le mode d'édition sans modifier
+    exitEditMode();
+}
+
+// Fonction pour quitter le mode édition
+function exitEditMode() {
+    itemBeingEdited = null;
+    newItemPanel.hidden = false;
+    editItemPanel.hidden = true;
+}
+
+// Fonction pour supprimer un item
+function deleteTodoItem(listItem) {
+    todoList.removeChild(listItem);
+}
+
+// Ajout d'événements pour les boutons
+newTodoButton.addEventListener("click", addTodoItem);
+editTodoConfirmButton.addEventListener("click", confirmEdit);
+editTodoCancelButton.addEventListener("click", cancelEdit);
